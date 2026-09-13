@@ -211,18 +211,24 @@
   .hours-row .time{color:var(--ink-light);font-weight:600;}
   .hours-row .time.closed{color:var(--muted-light);font-weight:500;}
 
-  /* ---- floating WhatsApp button ---- */
-  .wa-float{position:fixed;right:20px;bottom:20px;z-index:60;width:58px;height:58px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,0.28);transition:transform .18s ease;animation:waPulse 2.6s ease-out infinite;}
-  .wa-float:hover{transform:scale(1.07);}
-  .wa-float svg{width:32px;height:32px;}
-  .wa-float-label{position:absolute;right:70px;top:50%;transform:translateY(-50%) translateX(6px);background:var(--dark);color:var(--ink-light);font-family:var(--sans);font-size:13.5px;font-weight:600;padding:8px 13px;border-radius:8px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,0.22);opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;}
-  .wa-float:hover .wa-float-label, .wa-float:focus-visible .wa-float-label{opacity:1;transform:translateY(-50%) translateX(0);}
+  /* ---- floating social buttons ---- */
+  .floats{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;flex-direction:column;gap:14px;align-items:flex-end;}
+  .float-btn{position:relative;width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,0.28);transition:transform .18s ease;cursor:pointer;}
+  .float-btn:hover{transform:scale(1.07);}
+  .float-btn svg{width:32px;height:32px;}
+  .wa-btn{background:#25D366;animation:waPulse 2.6s ease-out infinite;}
+  .ig-btn{background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);}
+  .float-label{position:absolute;right:70px;top:50%;transform:translateY(-50%) translateX(6px);background:var(--dark);color:var(--ink-light);font-family:var(--sans);font-size:13.5px;font-weight:600;padding:8px 13px;border-radius:8px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,0.22);opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;}
+  .float-btn:hover .float-label, .float-btn:focus-visible .float-label{opacity:1;transform:translateY(-50%) translateX(0);}
   @keyframes waPulse{
     0%{box-shadow:0 6px 20px rgba(0,0,0,0.28), 0 0 0 0 rgba(37,211,102,0.5);}
     70%{box-shadow:0 6px 20px rgba(0,0,0,0.28), 0 0 0 16px rgba(37,211,102,0);}
     100%{box-shadow:0 6px 20px rgba(0,0,0,0.28), 0 0 0 0 rgba(37,211,102,0);}
   }
-  @media (max-width:560px){.wa-float{width:54px;height:54px;right:16px;bottom:16px;} .wa-float svg{width:29px;height:29px;} .wa-float-label{display:none;}}
+  /* toast (aviso emergente) */
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--dark);color:var(--ink-light);padding:14px 22px;border-radius:10px;font-family:var(--sans);font-size:14.5px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,0.32);border:1px solid var(--line-dark);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;max-width:calc(100vw - 32px);text-align:center;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  @media (max-width:560px){.floats{right:16px;bottom:16px;gap:12px;} .float-btn{width:54px;height:54px;} .float-btn svg{width:29px;height:29px;} .float-label{display:none;}}
 
   /* ---- scroll reveal ---- */
   html.js .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease, transform .7s ease;}
@@ -662,11 +668,18 @@
   </div>
 </footer>
 
-<!-- BOTÓN FLOTANTE DE WHATSAPP -->
-<a id="wa-float" class="wa-float" href="https://wa.me/12398778232" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <span class="wa-float-label i18n" data-es="¿Dudas? Escríbenos" data-en="Questions? Chat with us"></span>
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.35-.5.05-.99.24-3.34-.7-2.81-1.11-4.61-3.98-4.75-4.16-.14-.19-1.13-1.5-1.13-2.86 0-1.36.71-2.03.97-2.31.24-.26.53-.32.71-.32.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.58.78 1.99.85 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.47-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.28.14.44.12.6-.07.16-.19.69-.8.87-1.08.18-.28.36-.23.61-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.32.07.12.07.68-.17 1.35z"/></svg>
-</a>
+<!-- BOTONES FLOTANTES (Instagram + WhatsApp) -->
+<div class="floats">
+  <a id="ig-float" class="float-btn ig-btn" href="#" role="button" aria-label="Instagram">
+    <span class="float-label i18n" data-es="Síguenos en Instagram (pronto)" data-en="Follow us on Instagram (soon)"></span>
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 1.62c-3.15 0-3.52.01-4.76.07-.9.04-1.39.19-1.71.32-.43.17-.74.37-1.06.69-.32.32-.52.63-.69 1.06-.13.32-.28.81-.32 1.71-.06 1.24-.07 1.61-.07 4.76s.01 3.52.07 4.76c.04.9.19 1.39.32 1.71.17.43.37.74.69 1.06.32.32.63.52 1.06.69.32.13.81.28 1.71.32 1.24.06 1.61.07 4.76.07s3.52-.01 4.76-.07c.9-.04 1.39-.19 1.71-.32.43-.17.74-.37 1.06-.69.32-.32.52-.63.69-1.06.13-.32.28-.81.32-1.71.06-1.24.07-1.61.07-4.76s-.01-3.52-.07-4.76c-.04-.9-.19-1.39-.32-1.71-.17-.43-.37-.74-.69-1.06-.32-.32-.63-.52-1.06-.69-.32-.13-.81-.28-1.71-.32-1.24-.06-1.61-.07-4.76-.07zm0 2.76a5.3 5.3 0 1 1 0 10.6 5.3 5.3 0 0 1 0-10.6zm0 1.62a3.68 3.68 0 1 0 0 7.36 3.68 3.68 0 0 0 0-7.36zm5.5-.62a1.24 1.24 0 1 1-2.48 0 1.24 1.24 0 0 1 2.48 0z"/></svg>
+  </a>
+  <a id="wa-float" class="float-btn wa-btn" href="https://wa.me/12398778232" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <span class="float-label i18n" data-es="¿Dudas? Escríbenos" data-en="Questions? Chat with us"></span>
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.02c-.24.68-1.42 1.31-1.96 1.35-.5.05-.99.24-3.34-.7-2.81-1.11-4.61-3.98-4.75-4.16-.14-.19-1.13-1.5-1.13-2.86 0-1.36.71-2.03.97-2.31.24-.26.53-.32.71-.32.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.58.78 1.99.85 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.47-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.28.14.44.12.6-.07.16-.19.69-.8.87-1.08.18-.28.36-.23.61-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.32.07.12.07.68-.17 1.35z"/></svg>
+  </a>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ================= LOGO ================= */
@@ -711,6 +724,10 @@ function applyLang(lang){
     };
     waFloat.href = 'https://wa.me/12398778232?text=' + encodeURIComponent(waMsg[lang] || waMsg.es);
     waFloat.setAttribute('aria-label', lang === 'en' ? 'Chat on WhatsApp' : 'Escríbenos por WhatsApp');
+  }
+  const igFloat = document.getElementById('ig-float');
+  if(igFloat){
+    igFloat.setAttribute('aria-label', lang === 'en' ? 'Instagram (coming soon)' : 'Instagram (próximamente)');
   }
 }
 document.getElementById('lang-pill').addEventListener('click', (e)=>{
@@ -760,6 +777,29 @@ document.getElementById('contact-form').addEventListener('submit', function(e){
   const setPos = v => ba.style.setProperty('--pos', v);
   setPos(range.value);
   range.addEventListener('input', () => setPos(range.value));
+})();
+
+/* ================= INSTAGRAM (próximamente) + TOAST ================= */
+(function(){
+  const ig = document.getElementById('ig-float');
+  const toast = document.getElementById('toast');
+  if(!ig || !toast) return;
+  let hideTimer;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>toast.classList.remove('show'), 3200);
+  }
+  // TODO: cuando haya usuario de Instagram, reemplazar este manejador por:
+  //   ig.href = 'https://instagram.com/USUARIO'; ig.target = '_blank'; ig.rel = 'noopener';
+  // y eliminar el preventDefault de abajo.
+  ig.addEventListener('click', function(e){
+    e.preventDefault();
+    showToast(currentLang === 'en'
+      ? '📸 Coming soon on Instagram!'
+      : '📸 ¡Muy pronto en Instagram!');
+  });
 })();
 
 /* ================= SCROLL REVEAL ================= */
